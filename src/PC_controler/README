@@ -1,0 +1,16 @@
+power up your bluetooth
+
+bluetoothctl
+ -> power on
+ -> agent on
+ -> default-agent
+ -> scan on
+ -> pair MAC
+ -> pin = 0000
+
+export LD_LIBRARY_PATH="../common/:$LD_LIBRARY_PATH"
+
+sudo rfcomm connect rfcomm0 00:1B:10:00:2A:EC 1
+
+use pibot controler on /dev/rfcomm0
+

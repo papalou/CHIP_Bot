@@ -1,0 +1,10 @@
+# Specific extension to ignore
+*.o
+
+# Specific file to ignore
+tags
+buildroot
+toolchain
+linux
+uboot
+libcommon
