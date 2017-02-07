@@ -12,7 +12,7 @@ fi
 
 if [ ! -e linux ]; then
 	echo "Clone Linux Kernel"
-	git clone https://github.com/papalou/CHIP-linux linux
+	git clone -b CHIP_Bot https://github.com/papalou/CHIP-linux linux
 fi
 
 if [ ! -e uboot ]; then
@@ -27,3 +27,4 @@ if [ ! -e toolchain ]; then
 fi
 
 echo "Ready to go"
+echo "To build everything do -> make"
