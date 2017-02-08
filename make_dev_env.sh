@@ -22,9 +22,8 @@ fi
 
 if [ ! -e toolchain ]; then
 	echo "Install toolchain"
-	tar xvf gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
+	tar xf archives/gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
 	mv gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf toolchain
 fi
 
 echo "Ready to go"
-echo "To build everything do -> make"
