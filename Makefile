@@ -18,7 +18,9 @@ pc_controler:
 linux:
 	@echo "[ Build GNU/Linux kernel ]"
 	@cp configs/chip/linux.conf linux/.config
-	@cd linux && ./make_linux.sh
+	@cd linux && ./make_linux.sh O=../buildroot/output/target/
+	@echo "[ Install GNU/Linux kernel into buildroot target ]"
+	@cd linux && ./make_linux.sh O=../buildroot/output/target/ modules_install install
 
 buildroot:
 	@echo "[ Build Buildroot ]"
