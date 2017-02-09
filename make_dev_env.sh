@@ -12,7 +12,7 @@ fi
 
 if [ ! -e linux ]; then
 	echo "Clone Linux Kernel"
-	git clone -b CHIP_Bot https://github.com/papalou/CHIP-linux linux
+	git clone -b CHIP_PAPALOU https://github.com/papalou/CHIP-linux linux
 fi
 
 if [ ! -e uboot ]; then
