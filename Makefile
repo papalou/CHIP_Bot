@@ -44,6 +44,7 @@ distclean:
 	@cd uboot/ && $(MAKE) distclean
 	@cd libcommon/ && $(MAKE) distclean
 	@cd src/ && $(MAKE) distclean
+	@rm -rf release/
 
 clean:
 	@echo "[ Clean all project ]"
