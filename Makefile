@@ -19,7 +19,7 @@ linux:
 	@cp configs/linux.conf linux/.config
 	@cd linux && rm -rf target/ && mkdir target/
 	@cd linux && ./make_linux.sh
-	@echo "[ Install GNU/Linux kernel into buildroot target ]"
+	@echo "[ Install GNU/Linux kernel modules ]"
 	@cd linux && ./make_linux.sh modules_install install
 
 buildroot:
@@ -29,8 +29,8 @@ buildroot:
 
 uboot:
 	@echo "[ Build UBoot bootloader ]"
-	@cd uboot && $(MAKE)
-#TODO
+	@cp configs/uboot.conf uboot/.config
+	@cd uboot && ./make_uboot.sh
 
 src:buildroot
 	@echo "[ Build Source ]"
