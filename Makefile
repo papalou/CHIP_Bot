@@ -14,7 +14,7 @@ release:linux buildroot uboot src
 
 linux:
 	@echo "[ Build GNU/Linux kernel ]"
-	@cp configs/chip/linux.conf linux/.config
+	@cp configs/linux.conf linux/.config
 	@cd linux && rm -rf target/ && mkdir target/
 	@cd linux && ./make_linux.sh
 	@echo "[ Install GNU/Linux kernel into buildroot target ]"
@@ -22,7 +22,7 @@ linux:
 
 buildroot:
 	@echo "[ Build Buildroot ]"
-	@cp configs/chip/buildroot.conf buildroot/.config
+	@cp configs/buildroot.conf buildroot/.config
 	@cd buildroot/ && $(MAKE)
 
 uboot:
