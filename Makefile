@@ -9,8 +9,10 @@ release:linux buildroot uboot src
 	@cp linux/arch/arm/boot/dts/sun5i-r8-chip.dtb       release/
 	@cp linux/arch/arm/boot/dts/sun5i-r8-pocketchip.dtb release/
 	@cp buildroot/output/images/rootfs.tar              release/
-	@cp uboot/uboot.bin                                 release/
-	@cp src/chip_bot.bin                                release/
+	@cp uboot/u-boot-sunxi-with-spl.bin                 release/
+	@cp uboot/u-boot.bin                                release/
+	@cp uboot/u-boot-sunxi-padded.bin                   release/
+	@cp src/chip_bot                                    release/
 
 linux:
 	@echo "[ Build GNU/Linux kernel ]"
