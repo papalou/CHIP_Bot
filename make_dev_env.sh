@@ -17,7 +17,7 @@ fi
 
 if [ ! -e uboot ]; then
 	echo "Clone UBoot"
-	git clone https://github.com/papalou/CHIP-u-boot uboot
+	git clone -b CHIP_PAPALOU https://github.com/papalou/CHIP-u-boot uboot
 fi
 
 if [ ! -e toolchain ]; then
