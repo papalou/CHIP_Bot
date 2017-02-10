@@ -1,5 +1,18 @@
 all:release
 
+
+flash_chipbot:prepare_rootfs
+	@echo "[ Flash CHIP_bot ]"
+#TODO
+
+flash_pocketchip:prepare_rootfs
+	@echo "[ Flash PocketCHIP ]"
+#TODO
+
+prepare_rootfs:release
+	@echo "[ Prepare Rootfs.tar archive with release folder ]"
+	@sudo ./scripts/prepare_rootfs.sh -i release/rootfs.tar -o release/prepared_rootfs.tar -f release/
+
 release:linux buildroot uboot src
 	@echo "[ Generate release ]"
 	@rm -rf release/ && mkdir release/
