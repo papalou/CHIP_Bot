@@ -1,12 +1,6 @@
-BIN=pibot
-SRC=help.c                       \
-	uart.c                       \
-	motor.c                      \
-	i2c_servo.c                  \
-	pca9685.c                    \
-	communication_server_cmd.c   \
-	communication_server_video.c \
-	main.c                       \
+BIN=chip_bot
+SRC=                             \
+	main.c
 
 CC=$(CROSS_COMPILE)gcc
 AR=$(CROSS_COMPILE)ar
@@ -18,22 +12,20 @@ STAGING=$(SYSROOT)/../staging/
 ARFLAGS=rcs
 INCLUDE=-I.                           \
         -I$(STAGING)/usr/include      \
-        -I../../libcommon/src/minizip \
-		-I../../libcommon/src/        \
-		-I../common_pibot             \
+		-I../../libcommon/include     \
 
-CFLAGS=$(PKG_CONFIGS_CFLAGS) -pthread  -Wall -g -O0 -Wextra -fPIC -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
-LDFLAGS=$(PKG_CONFIGS_LDLAGS) -L. ../../libcommon/libcommon.a -lrt -lssl -lz -lcrypto
+CFLAGS=$(PKG_CONFIGS_CFLAGS) -Wall -g -O0 -Wextra -fPIC -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
+LDFLAGS=$(PKG_CONFIGS_LDLAGS) -L. ../libcommon/libcommon.a
 OBJECTS=$(SRC:.c=.o)
 
 all:$(BIN)
-	@echo "[ PiBot built ]"
+	@echo "[ Chip_Bot built ]"
 
 libcommon:
 	@echo "[Config libcommon]"
-	@cp ../../config/libcommon_arm_config ../../libcommon/.config
+	@cp ../configs/libcommon_arm.conf ../libcommon/cross_toolchain.config
 	@echo "[Build libcommon]"
-	@cd ../../libcommon/ && ./make_target.sh
+	@cd ../libcommon/ && ./make_target.sh
 
 $(BIN):libcommon $(OBJECTS)
 	@ echo cc link  ... -o $@
