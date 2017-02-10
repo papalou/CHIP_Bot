@@ -1,19 +1,16 @@
-all:                        \
-chip_bot                    \
-pocketchip_controler        \
-pc_controler
+all:release
 
-chip_bot:buildroot linux uboot
-	@echo "[ Build CHIP_Bot ]"
-	@cd src/chip_bot/ && ./make_target.sh
-
-pocketchip_controler:buildroot linux uboot
-	@echo "[ Build Pocketchip controler ]"
-	@cd src/pocketchip_controler/ && ./make_target.sh
-
-pc_controler:
-	@echo "[ Build PC Controler ]"
-	@cd src/pc_controler/ && $(MAKE)
+release:linux buildroot uboot src
+	@echo "[ Generate release ]"
+	@rm -rf release/ && mkdir release/
+	@cp linux/arch/arm/zImage                           release/
+	@mkdir release/linux_modules/
+	@cp -r linux/target/lib/                            release/linux_modules/
+	@cp linux/arch/arm/boot/dts/sun5i-r8-chip.dtb       release/
+	@cp linux/arch/arm/boot/dts/sun5i-r8-pocketchip.dtb release/
+	@cp buildroot/output/images/rootfs.tar              release/
+	@cp uboot/uboot.bin                                 release/
+	@cp src/chip_bot.bin                                release/
 
 linux:
 	@echo "[ Build GNU/Linux kernel ]"
@@ -33,6 +30,10 @@ uboot:
 	@cd uboot && $(MAKE)
 #TODO
 
+src:buildroot
+	@echo "[ Build Source ]"
+	@cd src/ && ./make_target.sh
+
 distclean:
 	@echo "[ Distclean all project ]"
 	@cd linux/ && $(MAKE) distclean
@@ -51,9 +52,7 @@ clean:
 
 .PHONY:                \
 all                    \
-chip_bot               \
-pocketchip_controler   \
-pc_controler           \
+src                    \
 linux                  \
 buildroot              \
 uboot                  \
