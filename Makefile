@@ -3,7 +3,7 @@ all:release
 release:linux buildroot uboot src
 	@echo "[ Generate release ]"
 	@rm -rf release/ && mkdir release/
-	@cp linux/arch/arm/zImage                           release/
+	@cp linux/arch/arm/boot/zImage                      release/
 	@mkdir release/linux_modules/
 	@cp -r linux/target/lib/                            release/linux_modules/
 	@cp linux/arch/arm/boot/dts/sun5i-r8-chip.dtb       release/
