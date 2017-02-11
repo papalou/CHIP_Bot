@@ -20,6 +20,11 @@ if [ ! -e uboot ]; then
 	git clone -b CHIP_PAPALOU https://github.com/papalou/CHIP-u-boot uboot
 fi
 
+if [ ! -e sunxi-tools ]; then
+	echo "Clone Sunxi-tools"
+	git clone https://github.com/linux-sunxi/sunxi-tools sunxi-tools
+fi
+
 if [ ! -e toolchain ]; then
 	echo "Install toolchain"
 	tar xf archives/gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
