@@ -1,8 +1,12 @@
 all:release
 
-
-flash_chipbot:prepare_rootfs
+flash_chipbot_4G:
+	@echo "[ Flash CHIP_bot 4G ]"
+	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -b buildroot/ -u release/u-boot.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar -v
+#TODO
+flash_chipbot_8G:prepare_rootfs
 	@echo "[ Flash CHIP_bot ]"
+	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -b buildroot/ -u release/u-boot.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar -v
 #TODO
 
 flash_pocketchip:prepare_rootfs
