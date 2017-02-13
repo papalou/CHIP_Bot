@@ -13,7 +13,7 @@ prepare_rootfs:release
 	@echo "[ Prepare Rootfs.tar archive with release folder ]"
 	@sudo ./scripts/prepare_rootfs.sh -i release/rootfs.tar -o release/prepared_rootfs.tar -f release/
 
-release:linux buildroot uboot src
+release:linux buildroot uboot sunxi-tools src
 	@echo "[ Generate release ]"
 	@rm -rf release/ && mkdir release/
 	@cp linux/arch/arm/boot/zImage                      release/
@@ -46,6 +46,11 @@ uboot:
 	@cp configs/uboot.conf uboot/.config
 	@cd uboot && ./make_uboot.sh
 
+sunxi-tools:
+	@echo "[ Build sunxi-tools ]"
+	@cd sunxi-tools/ && $(MAKE)
+	@cd sunxi-tools/ && $(MAKE) misc
+
 src:buildroot
 	@echo "[ Build Source ]"
 	@cd src/ && ./make_target.sh
@@ -55,6 +60,7 @@ distclean:
 	@cd linux/ && $(MAKE) distclean
 	@cd buildroot/ && $(MAKE) distclean
 	@cd uboot/ && $(MAKE) distclean
+	@cd sunxi-tools/ && $(MAKE) clean
 	@cd libcommon/ && $(MAKE) distclean
 	@cd src/ && $(MAKE) distclean
 	@rm -rf release/
@@ -64,6 +70,7 @@ clean:
 	@cd linux/ && $(MAKE) clean
 	@cd buildroot/ && $(MAKE) clean
 	@cd uboot/ && $(MAKE) clean
+	@cd sunxi-tools/ && $(MAKE) clean
 	@cd libcommon/ && $(MAKE) clean
 	@cd src/ && $(MAKE) clean
 
@@ -73,5 +80,6 @@ src                    \
 linux                  \
 buildroot              \
 uboot                  \
+sunxi-tools            \
 distclean              \
 clean
