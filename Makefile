@@ -2,18 +2,21 @@ all:release
 
 flash_chipbot_4G:
 	@echo "[ Flash CHIP_bot 4G ]"
-	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -b buildroot/ -u release/u-boot.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar -v
-#TODO
-flash_chipbot_8G:prepare_rootfs
-	@echo "[ Flash CHIP_bot ]"
-	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -b buildroot/ -u release/u-boot.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar -v
-#TODO
+	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
 
-flash_pocketchip:prepare_rootfs
-	@echo "[ Flash PocketCHIP ]"
-#TODO
+flash_chipbot_8G:
+	@echo "[ Flash CHIP_bot 8G ]"
+	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
 
-prepare_rootfs:release
+flash_pocketchip_4G:
+	@echo "[ Flash PocketCHIP 4G ]"
+	@sudo ./scripts/flash_device.sh -d pocketchip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+
+flash_pocketchip_8G:
+	@echo "[ Flash PocketCHIP 8G ]"
+	@sudo ./scripts/flash_device.sh -d pocketchip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+
+prepare_rootfs:
 	@echo "[ Prepare Rootfs.tar archive with release folder ]"
 	@sudo ./scripts/prepare_rootfs.sh -i release/rootfs.tar -o release/prepared_rootfs.tar -f release/
 
@@ -27,9 +30,7 @@ release:linux buildroot uboot sunxi-tools chip-mtd-utils src
 	@cp linux/arch/arm/boot/dts/sun5i-r8-pocketchip.dtb release/
 	@cp buildroot/output/images/rootfs.tar              release/
 	@cp uboot/spl/sunxi-spl.bin                         release/
-	@cp uboot/u-boot-sunxi-with-spl.bin                 release/
-	@cp uboot/u-boot.bin                                release/
-	@cp uboot/u-boot-sunxi-padded.bin                   release/
+	@cp uboot/u-boot-dtb.bin                            release/
 	@cp src/chip_bot                                    release/
 
 linux:
@@ -86,6 +87,7 @@ clean:
 all                    \
 src                    \
 linux                  \
+release                \
 buildroot              \
 uboot                  \
 sunxi-tools            \
