@@ -5,6 +5,7 @@ tmp_dir=`mktemp -d -t chip-global-XXXXXX`
 
 #Default variable value
 verbose=false
+custom_output_folder=false
 buildroot_folder_path=""
 device="chip"
 nand_type="Toshiba_4G_MLC"
@@ -92,8 +93,7 @@ prepare_ubi() {
 	
 	if [ "$nand_type" = "mlc" ]; then
 		logical_erase_block_size=$((erase_block_size/2-$page_size*2))
-		echo "WARNING FIX OPTION"
-		#mlcopts="-M dist3"
+		mlcopts="-M dist3"
 	elif [ $sub_page_size -lt $page_size ]; then
 		logical_erase_block_size=$((erase_block_size-page_size))
 	else
@@ -245,18 +245,9 @@ create_uboot_start_cmd(){
   	local uboot_size=$2
   	local padded_spl_size_to_write=$3
 
-	print_debug  "Output uboot cmd file --> $output_uboot_cmds"
-	print_debug  "uboot_size            --> $uboot_size"
-	print_debug  "pages_per_erase_block --> $pages_per_erase_block"
-
-	#if [ "x$ERASEMODE" = "xscrub" ]; then
-	#	echo "nand scrub.chip -y" > $output_uboot_cmds
-	#else
-	#	echo "nand erase.chip" > $output_uboot_cmds
-	#fi
-
 	#Erase nand scrub method
 	echo "nand erase.chip" > $output_uboot_cmds
+	#echo "nand scrub.chip -y" > $output_uboot_cmds
 	
 	#Print spl memory addr
 	echo "echo Write SPL --> addr: $spl_memory_addr 0x0 peb: $padded_spl_size_to_write" >> $output_uboot_cmds
@@ -330,13 +321,10 @@ show_help(){
 	echo "            -> Default: 'Toshiba_4G_MLC'"
 	echo "  -d  -- Device ['chip' or 'pocketchip']"
 	echo "            -> Default: 'chip'"
-	echo ""
-	echo "  -b  -- Buildroot folder path for tool used to flash [ex: /home/foo/CHIP_Bot/buildroot/]"
-	echo "  -t  -- Sunxi tools folder path [ex: /home/foo/CHIP_Bot/sunxi-tools/]"
-	echo ""
 	echo "  -u  -- u-boot.bin path [ex: release/u-boot.bin]"
 	echo "  -s  -- sunxi-spl.bin path [ex: release/sunxi-spl.bin]"
 	echo "  -r  -- rootfs.tar path [ex: release/prepared_rootfs.tar]"
+	echo "  -o  -- output debug folder to put build stuff for analyze path [ex: release/foo]"
 	echo ""
 	echo ""
 
@@ -345,7 +333,15 @@ show_help(){
 
 echo "Script start"
 
-while getopts "hvF:d:b:u:s:r:t:" opt; do
+#
+# Needed binary to build
+#
+sunxi_nand_image_builder="tools/sunxi-tools/sunxi-nand-image-builder"
+mkfs_ubifs="tools/chip-mtd-utils/mkfs.ubifs/mkfs.ubifs"
+ubinize="tools/chip-mtd-utils/ubi-utils/ubinize"
+img2simg="img2simg"
+
+while getopts "hvF:d:u:s:r:o:" opt; do
 	case $opt in
 		F)
 			nand_type="${OPTARG}"
@@ -366,9 +362,6 @@ while getopts "hvF:d:b:u:s:r:t:" opt; do
 		d)
 			device="${OPTARG}"
 		;;
-		b)
-			buildroot_folder_path="${OPTARG}"
-		;;
 		u)
 			uboot_bin_path="${OPTARG}"
 		;;
@@ -378,8 +371,11 @@ while getopts "hvF:d:b:u:s:r:t:" opt; do
 		r)
 			rootfs_tar_path="${OPTARG}"
 		;;
-		t)
-			sunxi_tools_path="${OPTARG}"
+		o)
+			echo "Warning debug folder set"
+			custom_output_folder=true
+			rm -rf ${tmp_dir}
+			tmp_dir="${OPTARG}"
 		;;
 		\?)
 			echo "== Invalid option: -${OPTARG} ==" >&2
@@ -387,11 +383,6 @@ while getopts "hvF:d:b:u:s:r:t:" opt; do
 		;;
 	esac
 done
-
-if [ "${buildroot_folder_path}" = "" ]; then
-	echo "Buildroot folder path is empty, abort..."
-	exit -1
-fi
 
 if [ "${uboot_bin_path}" = "" ]; then
 	echo "Uboot binary path is empty, abort..."
@@ -408,11 +399,6 @@ if [ "${rootfs_tar_path}" = "" ]; then
 	exit -1
 fi
 
-if [ "${sunxi_tools_path}" = "" ]; then
-	echo "sunxi tools path is empty, abort..."
-	exit -1
-fi
-
 case $device in
 	"chip")
 		echo "Device selected CHIP"
@@ -425,14 +411,6 @@ case $device in
 		exit 1
 	;;
 esac
-
-#
-# Needed binary to build
-#
-sunxi_nand_image_builder="${sunxi_tools_path}/sunxi-nand-image-builder"
-mkfs_ubifs="${buildroot_folder_path}/output/host/usr/sbin/mkfs.ubifs"
-ubinize="${buildroot_folder_path}/output/host/usr/sbin/ubinize"
-img2simg="img2simg"
 
 #Output binary
 output_spl="${tmp_dir}/spl.bin"
@@ -466,6 +444,12 @@ print_big_banner "Create what is needed in tmp_dir"
 
 case $nand_type in
 	"Hynix_8G_MLC")
+		UBI_nand_type="mlc"
+		UBI_max_leb_count=4096
+		UBI_max_leb_size=4194304
+		UBI_page_size=16384
+		UBI_sub_page_size=16384
+		UBI_oobsize=1664
 	;;
 	"Toshiba_4G_MLC")
 		UBI_nand_type="mlc"
@@ -476,6 +460,8 @@ case $nand_type in
 		UBI_oobsize=1280
 	;;
 	"Toshiba_512M_MLC")
+		echo "Flash no supported for the moment"
+		exit 0
 	;;
 	\?)
 		echo "== Invalid nand type: $nand_type ==" >&2
@@ -541,10 +527,6 @@ $fel_binary write $uboot_script_addr $output_uboot_script
 echo "Execute UBoot: addr: $uboot_memory_addr"
 $fel_binary exe $uboot_memory_addr
 
-
-
-echo "Exit"
-exit 0
 ###################################################################
 ##                                                               ##
 ##                     Flash UBIFS into the NAND                 ##
@@ -558,9 +540,11 @@ else
 	echo "failed to flash the UBI image"
 fi
 
-print_debug "Remove ${tmp_dir}"
-rm -rf ${tmp_dir}
+#Don't remove tmp folder if custom_output_folder option used
+if [ $custom_output_folder = false ]; then
+	print_debug "Remove ${tmp_dir}"
+	rm -rf ${tmp_dir}
+fi
 
 print_banner "All DONE exit"
 exit 0
-
