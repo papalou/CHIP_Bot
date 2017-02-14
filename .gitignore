@@ -10,4 +10,4 @@ uboot
 libcommon
 src/chip_bot
 release
-sunxi-tools
+tools

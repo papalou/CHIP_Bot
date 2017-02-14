@@ -17,7 +17,7 @@ prepare_rootfs:release
 	@echo "[ Prepare Rootfs.tar archive with release folder ]"
 	@sudo ./scripts/prepare_rootfs.sh -i release/rootfs.tar -o release/prepared_rootfs.tar -f release/
 
-release:linux buildroot uboot sunxi-tools src
+release:linux buildroot uboot sunxi-tools chip-mtd-utils src
 	@echo "[ Generate release ]"
 	@rm -rf release/ && mkdir release/
 	@cp linux/arch/arm/boot/zImage                      release/
@@ -51,9 +51,13 @@ uboot:
 	@cd uboot && ./make_uboot.sh
 
 sunxi-tools:
-	@echo "[ Build sunxi-tools ]"
-	@cd sunxi-tools/ && $(MAKE)
-	@cd sunxi-tools/ && $(MAKE) misc
+	@echo "[ Build tools/sunxi-tools ]"
+	@cd tools/sunxi-tools/ && $(MAKE)
+	@cd tools/sunxi-tools/ && $(MAKE) misc
+
+chip-mtd-utils:
+	@echo "[ Build tools/chip-mtd-utils ]"
+	@cd tools/chip-mtd-utils/ && $(MAKE)
 
 src:buildroot
 	@echo "[ Build Source ]"

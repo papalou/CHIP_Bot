@@ -20,15 +20,31 @@ if [ ! -e uboot ]; then
 	git clone -b CHIP_PAPALOU https://github.com/papalou/CHIP-u-boot uboot
 fi
 
-if [ ! -e sunxi-tools ]; then
-	echo "Clone Sunxi-tools"
-	git clone https://github.com/linux-sunxi/sunxi-tools sunxi-tools
-fi
-
 if [ ! -e toolchain ]; then
 	echo "Install toolchain"
 	tar xf archives/gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
 	mv gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf toolchain
 fi
+
+#Clone needed (host) tools
+if [ ! -e tools ]; then
+	echo "Create tools folder"
+	mkdir tools
+fi
+
+if [ ! -e tools/sunxi-tools ]; then
+	echo "Clone Sunxi-tools"
+	git clone -b origin/master https://github.com/papalou/sunxi-tools tools/sunxi-tools
+fi
+
+if [ ! -e tools/chip-mtd-utils ]; then
+	echo "Clone Sunxi-tools"
+	git clone -b origin/by/1.5.2/next-mlc-debian https://github.com/papalou/CHIP-mtd-utils tools/chip-mtd-utils
+fi
+
+#if [ ! -e tools/chip-tools ]; then
+#	echo "Clone CHIP-tools"
+#	git clone https://github.com/papalou/CHIP-tools tools/chip-tools
+#fi
 
 echo "Ready to go"
