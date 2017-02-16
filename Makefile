@@ -16,11 +16,11 @@ flash_pocketchip_8G:
 	@echo "[ Flash PocketCHIP 8G ]"
 	@sudo ./scripts/flash_device.sh -d pocketchip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
 
-prepare_rootfs:
+prepare_rootfs:linux buildroot uboot sunxi-tools chip-mtd-utils src
 	@echo "[ Prepare Rootfs.tar archive with release folder ]"
 	@sudo ./scripts/prepare_rootfs.sh -i release/rootfs.tar -o release/prepared_rootfs.tar -f release/
 
-release:linux buildroot uboot sunxi-tools chip-mtd-utils src
+release:prepare_rootfs
 	@echo "[ Generate release ]"
 	@rm -rf release/ && mkdir release/
 	@cp linux/arch/arm/boot/zImage                      release/
