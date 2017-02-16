@@ -1,3 +1,14 @@
 Simple project, one little bot using CHIP controled by pc or by one PocketCHIP
 
-A LOT TODO
+To build
+
+1) ./make_dev_env.sh
+
+2) make release
+
+To flash device you have choice for the device type:
+
+make flash_chipbot_4G
+make flash_chipbot_8G
+make flash_pocketchip_4G
+make flash_pocketchip_8G
