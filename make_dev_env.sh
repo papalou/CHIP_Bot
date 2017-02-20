@@ -24,12 +24,12 @@ fi
 
 if [ ! -e tools/sunxi-tools ]; then
 	echo "Clone Sunxi-tools"
-	git clone -b origin/master https://github.com/papalou/sunxi-tools tools/sunxi-tools
+	git clone -b master https://github.com/papalou/sunxi-tools tools/sunxi-tools
 fi
 
 if [ ! -e tools/chip-mtd-utils ]; then
 	echo "Clone Sunxi-tools"
-	git clone -b origin/by/1.5.2/next-mlc-debian https://github.com/papalou/CHIP-mtd-utils tools/chip-mtd-utils
+	git clone -b by/1.5.2/next-mlc-debian https://github.com/papalou/CHIP-mtd-utils tools/chip-mtd-utils
 fi
 
 echo "Ready to go"
