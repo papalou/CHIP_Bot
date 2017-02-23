@@ -42,19 +42,45 @@ src:
 	@echo "[ Build Source ]"
 	@cd src/ && ./make_target.sh
 
-distclean:
-	@echo "[ Distclean all project ]"
+######################################
+#                                    #
+#     DISTCLEAN AND CLEAN SECTION    #
+#                                    #
+######################################
+distclean:distclean_buildroot distclean_libcommon distclean_release clean_sunxi_tools clean_chip_mtd_utils clean_src
+
+distclean_buildroot:
+	@echo "[ Distclean buildroot ]"
 	@cd buildroot/ && $(MAKE) distclean
-	@cd sunxi-tools/ && $(MAKE) clean
+
+distclean_libcommon:
+	@echo "[ Distclean libcommon ]"
 	@cd libcommon/ && $(MAKE) distclean
-	@cd src/ && $(MAKE) distclean
+
+distclean_release:
+	@echo "[ Remove release folder ]"
 	@rm -rf release/
 
-clean:
-	@echo "[ Clean all project ]"
+clean:clean_buildroot clean_sunxi_tools clean_chip_mtd_utils clean_libcommon clean_src
+
+clean_buildroot:
+	@echo "[ Clean Buildroot ]"
 	@cd buildroot/ && $(MAKE) clean
-	@cd sunxi-tools/ && $(MAKE) clean
+
+clean_sunxi_tools:
+	@echo "[ Clean sunxi tools ]"
+	@cd tools/sunxi-tools/ && $(MAKE) clean
+
+clean_chip_mtd_utils:
+	@echo "[ Clean chip-mtd-utils ]"
+	@cd tools/chip-mtd-utils/ && $(MAKE) clean
+
+clean_libcommon:
+	@echo "[ Clean libcommon ]"
 	@cd libcommon/ && $(MAKE) clean
+
+clean_src:
+	@echo "[ Clean source ]"
 	@cd src/ && $(MAKE) clean
 
 .PHONY:                \
@@ -64,4 +90,12 @@ release                \
 buildroot              \
 sunxi-tools            \
 distclean              \
-clean
+distclean_buildroot    \
+distclean_libcommon    \
+distclean_release      \
+clean                  \
+clean_buildroot        \
+clean_sunxi_tools      \
+clean_chip_mtd_utils   \
+clean_libcommon        \
+clean_src
