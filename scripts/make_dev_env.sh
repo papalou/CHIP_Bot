@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Get in the good folder wathever the call path is...
+script_folder=$(dirname "$(readlink -f $0)")
+cd "${script_folder}/../"
+
+echo "Start make_dev_env.sh in folder: $(pwd)"
+
 if [ ! -e buildroot ]; then
 	echo "Clone buildroot"
 	git clone -b dev_chipbot https://github.com/papalou/CHIP-buildroot buildroot

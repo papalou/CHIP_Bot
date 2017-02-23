@@ -2,7 +2,7 @@ Simple project, one little bot using CHIP controled by pc or by one PocketCHIP
 
 To build
 
-1) ./make_dev_env.sh
+1) make dev_env
 
 2) make release
 
