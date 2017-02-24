@@ -140,57 +140,28 @@ prepare_spl() {
 	local erase_block_size=$3
 	local page_size=$4
 	local oob_size=$5
-	local repeat=$((erase_block_size/page_size/64))
 	local nand_spl=$tmp_dir_spl/nand-spl.bin
-	local nand_padded_spl=$tmp_dir_spl/nand-padded-spl.bin
-	local ebsize=`printf %x $erase_block_size`
-	local psize=`printf %x $page_size`
-	local osize=`printf %x $oob_size`
 	local padding=$tmp_dir_spl/padding
-	local spl_padding=$tmp_dir_spl/nand-spl-padding
 
 	print_debug "output_spl_file   --> $output_spl_file"
 	print_debug "input_spl_file    --> $input_spl_file"
 	print_debug "erase_block_size  --> $erase_block_size"
 	print_debug "page_size         --> $page_size"
 	print_debug "oob_size          --> $oob_size"
-	print_debug "repeat            --> $repeat"
 	print_debug "nand_spl          --> $nand_spl"
-	print_debug "nand_padded_spl   --> $nand_padded_spl"
-	print_debug "ebsize            --> $ebsize"
-	print_debug "psize             --> $psize"
-	print_debug "osize             --> $osize"
-	print_debug "padding           --> $padding"
-	print_debug "spl_padding       --> $spl_padding"
 	
 	print_debug "CMD --> $sunxi_nand_image_builder -c 64/1024 -p $page_size -o $oob_size -u 1024 -e $erase_block_size -b -s $input_spl_file $nand_spl"
 	$sunxi_nand_image_builder -c 64/1024 -p $page_size -o $oob_size -u 1024 -e $erase_block_size -b -s $input_spl_file $nand_spl
 	
 	local nand_spl_size=`filesize $nand_spl`
-	local padding_size=$((64-(nand_spl_size/(page_size+oob_size))))
+	local padding_size=$((($erase_block_size-$nand_spl_size)/1024))
 
-	local i=0
+	#create padding
+	print_debug "spl size: ${nand_spl_size}, padding size: ${padding_size} x 1024 bits"
+	dd if=/dev/urandom of=$padding bs=1024 count=$padding_size
 
-	print_debug "nand spl size : $nand_spl_size"
-	print_debug "page size     : $page_size"
-	print_debug "oob size      : $oob_size" #wtf is OOB 
-	print_debug "padding size  : $padding_size"
-	
-	while [ $i -lt $repeat ]; do
-		dd if=/dev/urandom of=$padding bs=1024 count=$padding_size
-		$sunxi_nand_image_builder -c 64/1024 -p $page_size -o $oob_size -u 1024 -e $erase_block_size -b -s $padding $spl_padding
-		cat $nand_spl $spl_padding > $nand_padded_spl
-	
-		if [ "$i" -eq "0" ]; then
-			print_debug "spl i equal 0"
-			cat $nand_padded_spl > $output_spl_file
-		else
-			print_debug "Spl in Else"
-			cat $nand_padded_spl >> $output_spl_file
-		fi
-	
-		i=$((i+1))
-	done
+	#put nand spl + padding into output_spl
+	cat $nand_spl $padding > $output_spl_file
 	
 	print_debug "Write spl file into: $output_spl_file size: $(filesize $output_spl_file)"
 	rm -rf $tmp_dir_spl
