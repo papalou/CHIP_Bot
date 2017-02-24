@@ -2,19 +2,19 @@ all:release
 
 flash_chipbot_4G:
 	@echo "[ Flash CHIP_bot 4G ]"
-	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
 flash_chipbot_8G:
 	@echo "[ Flash CHIP_bot 8G ]"
-	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
 flash_pocketchip_4G:
 	@echo "[ Flash PocketCHIP 4G ]"
-	@sudo ./scripts/flash_device.sh -d pocketchip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+	@sudo ./scripts/flash_device.sh -d pocketchip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
 flash_pocketchip_8G:
 	@echo "[ Flash PocketCHIP 8G ]"
-	@sudo ./scripts/flash_device.sh -d pocketchip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/prepared_rootfs.tar
+	@sudo ./scripts/flash_device.sh -d pocketchip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
 release:buildroot sunxi-tools chip-mtd-utils src
 	@echo "[ Generate release ]"
