@@ -18,8 +18,8 @@ fi
 
 if [ ! -e toolchain ]; then
 	echo "Install toolchain"
-	tar xf archives/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz
-	mv gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux toolchain
+	tar xf archives/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf.tar.xz
+	mv gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf toolchain
 fi
 
 #Clone needed (host) tools
