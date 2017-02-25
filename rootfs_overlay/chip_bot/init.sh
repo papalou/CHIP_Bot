@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Chip_bot is starting"
-
+#Run chip_bot
+/chip_bot/chip_bot &
 
 exit 0
