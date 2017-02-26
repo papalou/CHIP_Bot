@@ -98,7 +98,7 @@ prepare_ubi() {
 	if [ -z $sub_page_size ]; then
 		sub_page_size=$page_size
 	fi
-	
+
 	if [ "$nand_type" = "mlc" ]; then
 		logical_erase_block_size=$((erase_block_size/2-$page_size*2))
 		mlcopts="-M dist3"
@@ -157,10 +157,10 @@ prepare_spl() {
 	print_debug "page_size         --> $page_size"
 	print_debug "oob_size          --> $oob_size"
 	print_debug "nand_spl          --> $nand_spl"
-	
+
 	print_debug "CMD --> $sunxi_nand_image_builder -c 64/1024 -p $page_size -o $oob_size -u 1024 -e $erase_block_size -b -s $input_spl_file $nand_spl"
 	$sunxi_nand_image_builder -c 64/1024 -p $page_size -o $oob_size -u 1024 -e $erase_block_size -b -s $input_spl_file $nand_spl
-	
+
 	local nand_spl_size=`filesize $nand_spl`
 	local padding_size=$((($erase_block_size-$nand_spl_size)/1024))
 
@@ -171,7 +171,7 @@ prepare_spl() {
 	#put nand spl + padding into output_spl
 	#cat $nand_spl $padding > $output_spl_file
 	cat $nand_spl > $output_spl_file
-	
+
 	print_debug "Write spl file into: $output_spl_file size: $(filesize $output_spl_file)"
 	rm -rf $tmp_dir_spl
 	return 0
@@ -184,7 +184,7 @@ prepare_uboot() {
 	local eraseblocksize=$3
 	local ebsize=`printf %x $eraseblocksize`
 	local paddeduboot=$output_uboot_file
-	
+
 	dd if=$input_uboot_file of=$paddeduboot bs=$eraseblocksize conv=sync
 	echo "Write uboot file into: $paddeduboot"
 	return 0
@@ -228,7 +228,7 @@ create_uboot_start_cmd(){
 	#Erase nand scrub method
 	#echo "nand erase.chip" > $output_uboot_cmds
 	echo "nand scrub.chip -y" > $output_uboot_cmds
-	
+
 	#Print spl memory addr
 	echo "echo Write SPL --> addr: $spl_memory_addr 0x0 peb: $padded_spl_size_to_write" >> $output_uboot_cmds
 	echo "nand write.raw.noverify $spl_memory_addr 0x0 $padded_spl_size_to_write" >> $output_uboot_cmds
@@ -246,12 +246,12 @@ create_uboot_start_cmd(){
 	echo "setenv bootargs root=ubi0:rootfs rootfstype=ubifs rw earlyprintk ubi.mtd=4" >> $output_uboot_cmds
 	echo "setenv bootcmd 'gpio set PB2; if test -n \${fel_booted} && test -n \${scriptaddr}; then echo '(FEL boot)'; source \${scriptaddr}; fi; mtdparts; ubi part UBI; ubifsmount ubi0:rootfs; ubifsload \$fdt_addr_r /boot/sun5i-r8-chip.dtb; ubifsload \$kernel_addr_r /boot/zImage; bootz \$kernel_addr_r - \$fdt_addr_r'" >> $output_uboot_cmds
 	echo "setenv fel_booted 0" >> $output_uboot_cmds
-	
+
 	echo "echo Enabling Splash" >> $output_uboot_cmds
 	echo "setenv stdout serial" >> $output_uboot_cmds
 	echo "setenv stderr serial" >> $output_uboot_cmds
 	echo "setenv splashpos m,m" >> $output_uboot_cmds
-	
+
 	echo "echo Configuring Video Mode" >> $output_uboot_cmds
 
 	if [ "$device" = "pocketchip" ]; then
@@ -282,9 +282,9 @@ create_uboot_start_cmd(){
 		echo "setenv dip_overlay_cmd 'if test -n \"\${dip_overlay_name}\"; then ubifsload \$dip_addr_r \$dip_overlay_dir/\$dip_overlay_name; fi'" >> $output_uboot_cmds
 		echo "setenv video-mode sunxi:640x480-24@60,monitor=composite-ntsc,overscan_x=40,overscan_y=20" >> $output_uboot_cmds
 	fi
-	
+
 	echo "saveenv" >> $output_uboot_cmds
-	
+
 	echo "echo going to fastboot mode" >> $output_uboot_cmds
 	echo "fastboot 0" >> $output_uboot_cmds
 	echo "reset" >> $output_uboot_cmds
