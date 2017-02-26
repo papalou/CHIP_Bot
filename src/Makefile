@@ -12,7 +12,7 @@ STAGING=$(SYSROOT)/../staging/
 ARFLAGS=rcs
 INCLUDE=-I.                           \
         -I$(STAGING)/usr/include      \
-		-I../../libcommon/include     \
+		-I../libcommon/include     \
 
 CFLAGS=$(PKG_CONFIGS_CFLAGS) -Wall -g -O0 -Wextra -fPIC -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast
 LDFLAGS=$(PKG_CONFIGS_LDLAGS) -L. ../libcommon/libcommon.a
