@@ -3,6 +3,15 @@
 #Tmp folder where all needed (definitive) flash image are put
 tmp_dir=`mktemp -d -t chip-global-XXXXXX`
 
+#
+# Needed binary to build
+#
+sunxi_nand_image_builder="tools/sunxi-tools/sunxi-nand-image-builder"
+fel_binary="tools/sunxi-tools/sunxi-fel"
+mkfs_ubifs="tools/chip-mtd-utils/mkfs.ubifs/mkfs.ubifs"
+ubinize="tools/chip-mtd-utils/ubi-utils/ubinize"
+img2simg="buildroot/output/host/usr/bin/img2simg"
+
 #Default variable value
 verbose=false
 custom_output_folder=false
@@ -10,7 +19,6 @@ buildroot_folder_path=""
 device="chip"
 nand_type="Toshiba_4G_MLC"
 timeout_secondes=120
-fel_binary="sunxi-fel"
 
 #Ram addr onboard
 spl_memory_addr="0x43000000"
@@ -303,14 +311,6 @@ show_help(){
 }
 
 echo "Script start"
-
-#
-# Needed binary to build
-#
-sunxi_nand_image_builder="tools/sunxi-tools/sunxi-nand-image-builder"
-mkfs_ubifs="tools/chip-mtd-utils/mkfs.ubifs/mkfs.ubifs"
-ubinize="tools/chip-mtd-utils/ubi-utils/ubinize"
-img2simg="img2simg"
 
 while getopts "hvF:d:u:s:r:o:" opt; do
 	case $opt in
