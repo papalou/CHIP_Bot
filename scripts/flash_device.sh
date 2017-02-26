@@ -169,7 +169,8 @@ prepare_spl() {
 	dd if=/dev/urandom of=$padding bs=1024 count=$padding_size
 
 	#put nand spl + padding into output_spl
-	cat $nand_spl $padding > $output_spl_file
+	#cat $nand_spl $padding > $output_spl_file
+	cat $nand_spl > $output_spl_file
 	
 	print_debug "Write spl file into: $output_spl_file size: $(filesize $output_spl_file)"
 	rm -rf $tmp_dir_spl
