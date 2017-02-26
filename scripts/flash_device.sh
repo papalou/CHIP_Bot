@@ -226,8 +226,8 @@ create_uboot_start_cmd(){
   	local padded_spl_size_to_write=$3
 
 	#Erase nand scrub method
-	echo "nand erase.chip" > $output_uboot_cmds
-	#echo "nand scrub.chip -y" > $output_uboot_cmds
+	#echo "nand erase.chip" > $output_uboot_cmds
+	echo "nand scrub.chip -y" > $output_uboot_cmds
 	
 	#Print spl memory addr
 	echo "echo Write SPL --> addr: $spl_memory_addr 0x0 peb: $padded_spl_size_to_write" >> $output_uboot_cmds
