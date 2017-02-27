@@ -1,10 +1,10 @@
 all:release
 
-flash_chipbot_4G:
+flash_chip_4G:
 	@echo "[ Flash CHIP_bot 4G ]"
 	@sudo ./scripts/flash_device.sh -d chip -F Toshiba_4G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
-flash_chipbot_8G:
+flash_chip_8G:
 	@echo "[ Flash CHIP_bot 8G ]"
 	@sudo ./scripts/flash_device.sh -d chip -F Hynix_8G_MLC -u release/u-boot-dtb.bin -s release/sunxi-spl.bin -r release/rootfs.tar
 
