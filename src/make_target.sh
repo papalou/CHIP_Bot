@@ -6,4 +6,4 @@ export LD_LIBRARY_PATH=$ARM_TOOLCHAIN_PATH/lib
 export PATH=$ARM_TOOLCHAIN_PATH/bin:$PATH
 
 if [ $# -eq 0 ] ; then echo ; echo " ---==== $(basename $(pwd))  ====---"; echo ; fi
-make --no-print-directory  ARCH=arm CROSS_COMPILE=$ARM_TOOLCHAIN_PRFIX SYSROOT=$(pwd)/../buildroot/output/target/  $1
+make --no-print-directory  ARCH=arm CROSS_COMPILE=$ARM_TOOLCHAIN_PRFIX SYSROOT=$(pwd)/../buildroot/output/host/  $1
