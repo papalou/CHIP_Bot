@@ -8,8 +8,8 @@ To build
 
 To flash device you have choice for the device type:
 
-make flash_chipbot_4G
-make flash_chipbot_8G
+make flash_chip_4G
+make flash_chip_8G
 make flash_pocketchip_4G
 make flash_pocketchip_8G
 
